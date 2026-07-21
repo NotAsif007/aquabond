@@ -67,7 +67,7 @@ const COZY_THEMES: Record<string, CozyPalette> = {
   }
 };
 
-const NAV_TABS = ["home", "analytics", "partner", "social", "progress", "shop", "settings"];
+const NAV_TABS = ["home", "analytics", "partner", "social", "settings"];
 
 // Page transition variants
 const pageVariants = {
@@ -177,8 +177,6 @@ function AquaBondApp() {
       case "analytics": return <DashboardAnalyticsTab />;
       case "partner": return <PartnerTab />;
       case "social": return <SocialTab />;
-      case "progress": return <ProgressTab />;
-      case "shop": return <ThemesTab />;
       case "settings": return <SettingsTab />;
       default: return <DashboardTab />;
     }
