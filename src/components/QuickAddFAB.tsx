@@ -13,7 +13,7 @@ interface QuickOption {
   y: number;
 }
 
-// All coordinates have x <= 0 to expand UP and LEFT, never right!
+// Radial options expanding UP and LEFT
 const QUICK_OPTIONS: QuickOption[] = [
   { label: "150ml", amount: 150, type: "cup", emoji: "☕", x: -72, y: 0 },
   { label: "250ml", amount: 250, type: "cup", emoji: "🥤", x: -62, y: -58 },
@@ -44,7 +44,12 @@ export const QuickAddFAB: React.FC = () => {
   if (!profile) return null;
 
   return (
-    <div className="fixed bottom-20 sm:bottom-6 right-5 sm:right-8 z-50">
+    <motion.div 
+      drag
+      dragMomentum={false}
+      dragElastic={0.08}
+      className="fixed bottom-24 sm:bottom-8 right-5 sm:right-8 z-50 cursor-grab active:cursor-grabbing touch-none select-none"
+    >
       {/* Backdrop */}
       <AnimatePresence>
         {isOpen && (
@@ -59,7 +64,7 @@ export const QuickAddFAB: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Radial options expanding UP and LEFT */}
+      {/* Radial options expanding UP and LEFT relative to FAB position */}
       <AnimatePresence>
         {isOpen && QUICK_OPTIONS.map((opt, i) => (
           <motion.button
@@ -96,14 +101,14 @@ export const QuickAddFAB: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Main FAB button */}
+      {/* Main FAB button — Draggable & Clickable */}
       <motion.button
         onClick={toggleMenu}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.9 }}
         animate={{ rotate: isOpen ? 45 : 0 }}
         transition={{ type: "spring", stiffness: 320, damping: 20 }}
-        className="relative z-50 w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF92A9] to-[#FAD0C4] text-white shadow-xl flex items-center justify-center border-2 border-white/40"
+        className="relative z-50 w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF92A9] to-[#FAD0C4] text-white shadow-xl flex items-center justify-center border-2 border-white/40 cursor-grab active:cursor-grabbing"
         style={{
           boxShadow: "0 6px 24px rgba(255, 146, 169, 0.4), 0 2px 8px rgba(0,0,0,0.08)"
         }}
@@ -119,6 +124,6 @@ export const QuickAddFAB: React.FC = () => {
           />
         )}
       </motion.button>
-    </div>
+    </motion.div>
   );
 };

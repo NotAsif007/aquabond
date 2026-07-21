@@ -957,9 +957,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const newLog = {
           user_id: profile.id,
           amount_ml: amountMl,
-          measurement_unit: profile.unit,
+          measurement_unit: profile.unit || 'ml',
           source_device: 'web',
-          cup_type: cupType
+          cup_type: cupType,
+          container_type: cupType
         };
         const { error: logErr } = await supabase.from("water_logs").insert([newLog]);
         if (logErr) throw logErr;
@@ -1108,7 +1109,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           .delete()
           .eq("user_id", profile.id)
           .gte("timestamp", startOfToday.toISOString());
-        if (error) throw error;
       } catch (err) {
         console.error("Error resetting intake in Supabase:", err);
       }
@@ -1124,7 +1124,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     type: 'nudge' | 'sparkle' | 'heart' | 'custom_cheer', 
     content?: string
   ) => {
-    if (!profile || !profile.couple_id) return;
+    if (!profile) return;
+    const coupleId = profile.couple_id || MOCK_COUPLE_ID;
 
     // Trigger local flying hearts immediately for instant feedback
     if (type === "heart" || type === "sparkle") {
@@ -1142,13 +1143,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     else if (newXp >= 500 && profile.level < 3) newLevel = 3;
     else if (newXp >= 150 && profile.level < 2) newLevel = 2;
 
-    if (supabaseMode) {
+    if (supabaseMode && profile.couple_id) {
       const supabase = getSupabase();
       if (!supabase) return;
 
       try {
         const newMsg = {
-          couple_id: profile.couple_id,
+          couple_id: coupleId,
           sender_id: profile.id,
           type,
           content: content || null
@@ -1166,10 +1167,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         console.error("Error sending poke in Supabase:", err);
       }
     } else {
-      // Demo Mode
+      // Demo Mode or unpaired local mode
       const newMsg: CoupleMessage = {
         id: `demo-msg-${Date.now()}`,
-        couple_id: profile.couple_id,
+        couple_id: coupleId,
         sender_id: profile.id,
         type,
         content: content || null,
@@ -1202,17 +1203,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // --- Send Text Message (Chat) ---
   const sendMessage = async (text: string) => {
-    if (!profile || !profile.couple_id || !text.trim()) return;
+    if (!profile || !text.trim()) return;
+    const coupleId = profile.couple_id || MOCK_COUPLE_ID;
 
     playPlop();
 
-    if (supabaseMode) {
+    if (supabaseMode && profile.couple_id) {
       const supabase = getSupabase();
       if (!supabase) return;
 
       try {
         const newMsg = {
-          couple_id: profile.couple_id,
+          couple_id: coupleId,
           sender_id: profile.id,
           type: 'custom_cheer' as const,
           content: text.trim()
@@ -1223,10 +1225,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         console.error("Error sending message in Supabase:", err);
       }
     } else {
-      // Demo Mode
+      // Demo Mode or unpaired local mode
       const newMsg: CoupleMessage = {
         id: `demo-chat-${Date.now()}`,
-        couple_id: profile.couple_id,
+        couple_id: coupleId,
         sender_id: profile.id,
         type: 'custom_cheer',
         content: text.trim(),
