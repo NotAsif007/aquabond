@@ -1108,6 +1108,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const resetIntake = async () => {
     if (!profile) return;
 
+    // Optimistically clear local logs state immediately!
+    setLogs([]);
+
     if (supabaseMode) {
       const supabase = getSupabase();
       if (!supabase) return;
@@ -1116,18 +1119,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
 
-        // Delete logs for today
         const { error } = await supabase
           .from("water_logs")
           .delete()
           .eq("user_id", profile.id)
           .gte("timestamp", startOfToday.toISOString());
+        
+        if (error) throw error;
+
+        await fetchTodayLogs(profile.id, profile.partner_id);
       } catch (err) {
         console.error("Error resetting intake in Supabase:", err);
       }
     } else {
       // Demo Mode
-      setLogs([]);
       localStorage.setItem("aquabond_demo_logs", JSON.stringify([]));
     }
   };

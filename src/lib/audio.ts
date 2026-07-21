@@ -1,6 +1,6 @@
 // Web Audio API Synthesizer for AquaBond sound effects
 
-let audioFeedbackEnabled = true;
+let audioFeedbackEnabled = false;
 
 export function setAudioFeedbackEnabled(enabled: boolean) {
   audioFeedbackEnabled = enabled;
