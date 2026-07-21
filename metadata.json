@@ -1,0 +1,6 @@
+{
+  "name": "AquaBond Spec Center",
+  "description": "Product requirements, technical architecture, and interactive design simulator for AquaBond, a cozy couple's hydration app.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
