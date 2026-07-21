@@ -406,14 +406,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             );
 
             if (!isDndActiveNow()) {
-              // Trigger heart float animation
+              // Trigger heart float animation & tactile mobile vibration
               if (msg.type === "heart" || msg.type === "sparkle") {
                 triggerLocalFlyingHeart();
                 playHeartBurstSound();
                 setIsPartnerVibrating(true);
                 setTimeout(() => setIsPartnerVibrating(false), 350);
+                if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                  try {
+                    navigator.vibrate([150, 100, 150, 100, 300]);
+                  } catch (e) {}
+                }
               } else {
                 playPlop();
+                if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                  try {
+                    navigator.vibrate(100);
+                  } catch (e) {}
+                }
               }
             }
           }
@@ -1175,12 +1185,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!profile) return;
     const coupleId = profile.couple_id || MOCK_COUPLE_ID;
 
-    // Trigger local flying hearts immediately for instant feedback
+    // Trigger local flying hearts & mobile vibration immediately for tactile feedback
     if (type === "heart" || type === "sparkle") {
       triggerLocalFlyingHeart();
       playHeartBurstSound();
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate([120, 80, 120, 80, 250]);
+        } catch (e) {}
+      }
     } else {
       playPlop();
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate(80);
+        } catch (e) {}
+      }
     }
 
     // Award +15 XP for team interaction

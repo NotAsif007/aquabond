@@ -88,30 +88,37 @@ function AquaBondApp() {
   const [isDbModalOpen, setIsDbModalOpen] = useState<boolean>(false);
 
   // Swipe gesture detection states
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
-  const minSwipeDistance = 50;
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+  const [touchEndY, setTouchEndY] = useState<number | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    setTouchEndX(null);
+    setTouchEndY(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+    setTouchStartY(e.targetTouches[0].clientY);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    setTouchEndX(e.targetTouches[0].clientX);
+    setTouchEndY(e.targetTouches[0].clientY);
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    if (touchStartX === null || touchEndX === null || touchStartY === null || touchEndY === null) return;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+
+    // Only trigger horizontal tab swipe if horizontal movement is >= 65px AND 2.5x greater than vertical movement
+    if (Math.abs(diffX) < 65 || Math.abs(diffX) < 2.5 * Math.abs(diffY)) {
+      return;
+    }
 
     const currentIndex = NAV_TABS.indexOf(activeTab);
-    if (isLeftSwipe && currentIndex < NAV_TABS.length - 1) {
+    if (diffX > 0 && currentIndex < NAV_TABS.length - 1) {
       setActiveTab(NAV_TABS[currentIndex + 1]);
-    } else if (isRightSwipe && currentIndex > 0) {
+    } else if (diffX < 0 && currentIndex > 0) {
       setActiveTab(NAV_TABS[currentIndex - 1]);
     }
   };

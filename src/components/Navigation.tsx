@@ -48,6 +48,14 @@ export const Navigation: React.FC<NavigationProps> = ({
     };
   }, []);
 
+  // Reset navbar visibility whenever active tab changes or swiped
+  React.useEffect(() => {
+    setIsKeyboardOpen(false);
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }, [activeTab]);
+
   const handleTabClick = (tabId: string) => {
     onChangeTab(tabId);
     if (tabId === "social") {
