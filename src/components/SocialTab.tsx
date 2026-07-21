@@ -9,12 +9,21 @@ export const SocialTab: React.FC = () => {
   const [text, setText] = useState("");
   const [showStickers, setShowStickers] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const STICKERS = ["💧", "🐰", "🐧", "🐱", "✨", "💖", "🌊", "🎉"];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Auto-focus chat input on tab mount so soft keyboard opens by default
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,6 +193,8 @@ export const SocialTab: React.FC = () => {
           </button>
 
           <input
+            ref={inputRef}
+            autoFocus
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
