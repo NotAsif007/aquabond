@@ -1191,7 +1191,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     else if (newXp >= 500 && profile.level < 3) newLevel = 3;
     else if (newXp >= 150 && profile.level < 2) newLevel = 2;
 
-    if (supabaseMode && profile.couple_id) {
+    const localMsg: CoupleMessage = {
+      id: `msg-${Date.now()}`,
+      couple_id: coupleId,
+      sender_id: profile.id,
+      type,
+      content: content || (type === 'heart' ? '❤️ Sent a love nudge!' : null),
+      timestamp: new Date().toISOString()
+    };
+
+    // Optimistically add message to chat immediately!
+    setMessages(prev => [...prev, localMsg]);
+    setProfile(prev => prev ? { ...prev, xp: newXp, level: newLevel } : null);
+
+    if (supabaseMode) {
       const supabase = getSupabase();
       if (!supabase) return;
 
@@ -1200,7 +1213,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           couple_id: coupleId,
           sender_id: profile.id,
           type,
-          content: content || null
+          content: localMsg.content
         };
         const { error: msgErr } = await supabase.from("couple_messages").insert([newMsg]);
         if (msgErr) throw msgErr;
@@ -1256,7 +1269,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     playPlop();
 
-    if (supabaseMode && profile.couple_id) {
+    const localMsg: CoupleMessage = {
+      id: `msg-${Date.now()}`,
+      couple_id: coupleId,
+      sender_id: profile.id,
+      type: 'custom_cheer',
+      content: text.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    setMessages(prev => [...prev, localMsg]);
+
+    if (supabaseMode) {
       const supabase = getSupabase();
       if (!supabase) return;
 

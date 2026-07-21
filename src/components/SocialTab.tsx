@@ -69,8 +69,11 @@ export const SocialTab: React.FC = () => {
   };
 
   const groupedMessages = useMemo(() => {
+    const sorted = [...(messages || [])].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
     const groups: Record<string, typeof messages> = {};
-    (messages || []).forEach((msg) => {
+    sorted.forEach((msg) => {
       const date = new Date(msg.timestamp).toLocaleDateString("en-US", {
         month: "short",
         day: "numeric"
