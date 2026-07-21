@@ -188,7 +188,7 @@ function AquaBondApp() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between bg-gradient-to-tr ${palette.bgGradient} transition-all duration-1000 ease-out pt-3 sm:py-6 px-3 sm:px-8 pb-20 sm:pb-6 font-sans antialiased text-[#4A4458] relative`}>
+    <div className={`min-h-screen flex flex-col justify-between bg-gradient-to-tr ${palette.bgGradient} transition-all duration-1000 ease-out pt-3 sm:py-6 px-3 sm:px-8 ${activeTab === 'social' ? 'pb-3 sm:pb-6' : 'pb-20 sm:pb-6'} font-sans antialiased text-[#4A4458] relative`}>
       <div className="max-w-7xl w-full mx-auto space-y-3 sm:space-y-6 relative z-10 flex-1 flex flex-col">
         
         {/* Header */}
