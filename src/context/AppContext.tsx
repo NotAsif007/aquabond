@@ -387,7 +387,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         },
         (payload) => {
           const msg = payload.new as CoupleMessage;
-          setMessages(prev => [msg, ...prev].slice(0, 30));
+          setMessages(prev => {
+            const isDuplicate = prev.some(m => 
+              m.id === msg.id || 
+              (m.sender_id === msg.sender_id && m.content === msg.content && Math.abs(new Date(m.timestamp || Date.now()).getTime() - new Date(msg.timestamp || Date.now()).getTime()) < 5000)
+            );
+            if (isDuplicate) {
+              return prev.map(m => (m.sender_id === msg.sender_id && m.content === msg.content) ? msg : m);
+            }
+            return [...prev, msg];
+          });
 
           // Trigger local nudge alerts/vibrations if sender is partner
           if (msg.sender_id === partnerId) {

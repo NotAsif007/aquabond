@@ -69,7 +69,14 @@ export const SocialTab: React.FC = () => {
   };
 
   const groupedMessages = useMemo(() => {
-    const sorted = [...(messages || [])].sort(
+    const uniqueMap = new Map<string, typeof messages[0]>();
+    (messages || []).forEach(m => {
+      // Key by ID or content+sender combo to prevent duplicates
+      const key = m.id.startsWith("msg-") ? `${m.sender_id}-${m.content}` : m.id;
+      uniqueMap.set(key, m);
+    });
+
+    const sorted = Array.from(uniqueMap.values()).sort(
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
     const groups: Record<string, typeof messages> = {};
