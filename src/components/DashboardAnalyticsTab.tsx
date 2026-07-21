@@ -281,31 +281,62 @@ export const DashboardAnalyticsTab: React.FC = () => {
       {/* WEEKLY DUAL-CHARTS */}
       <StatsTab />
 
-      {/* ADAPTIVE WEATHER ADVICE BOX */}
-      <AnimatePresence>
-        {weatherEnabled && (
-          <motion.div 
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="glass-card rounded-[24px] p-5 space-y-1.5"
-          >
-            <div className="flex items-center gap-1.5 border-b border-[#FFF0F2]/50 pb-1.5">
-              <CloudSun className="w-4.5 h-4.5 text-[#FF92A9]" />
-              <h4 className="text-[10px] font-black text-[#2D283E] uppercase tracking-wider block font-mono">Weather Goal Adjustment</h4>
+      {/* LIVE WEATHER WIDGET CARD */}
+      <motion.div 
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.25 }}
+        className="glass-card rounded-[24px] p-5 space-y-3"
+      >
+        <div className="flex items-center justify-between border-b theme-border-accent pb-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl theme-bg-accent theme-text-primary flex items-center justify-center">
+              <CloudSun className="w-4.5 h-4.5" />
             </div>
-            <div className="text-xs leading-relaxed font-semibold">
-              <p className="text-[#8E8A9A]">
-                Current GPS conditions: <strong className="text-[#2D283E]">{temperature}°C</strong>, <strong className="text-[#2D283E]">{humidity}% humidity</strong>.
-              </p>
-              <p className="text-[#4A4458] mt-1 bg-[#FFF0F2]/30 border border-[#FFF0F2] p-2.5 rounded-xl italic">
-                "{weatherReason}"
-              </p>
+            <div>
+              <h4 className="text-xs font-extrabold text-[#2D283E] uppercase tracking-wider font-mono">Live Weather & Goal Sync</h4>
+              <span className="text-[10px] text-[#8E8A9A] font-medium">GPS Climate Conditions</span>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+          <span className="text-[10px] font-black uppercase theme-bg-accent theme-text-primary px-2.5 py-1 rounded-full border theme-border-accent">
+            {temperature > 25 ? "☀️ Warm" : temperature < 15 ? "❄️ Cool" : "⛅ Mild"}
+          </span>
+        </div>
+
+        {/* Climate Metrics */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          <div className="bg-amber-50/70 border border-amber-100 p-2.5 rounded-2xl flex items-center gap-2.5">
+            <span className="text-xl">🌡️</span>
+            <div>
+              <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Temperature</span>
+              <span className="text-xs font-black text-[#2D283E] mt-0.5 block">{temperature}°C</span>
+            </div>
+          </div>
+
+          <div className="bg-sky-50/70 border border-sky-100 p-2.5 rounded-2xl flex items-center gap-2.5">
+            <span className="text-xl">💧</span>
+            <div>
+              <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Humidity</span>
+              <span className="text-xs font-black text-[#2D283E] mt-0.5 block">{humidity}%</span>
+            </div>
+          </div>
+
+          <div className="col-span-2 sm:col-span-1 theme-bg-accent border theme-border-accent p-2.5 rounded-2xl flex items-center gap-2.5">
+            <span className="text-xl">⚡</span>
+            <div>
+              <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Target Bonus</span>
+              <span className="text-xs font-black theme-text-primary mt-0.5 block">
+                {temperature > 22 ? `+${Math.round((temperature - 22) * 30)}ml` : "Standard Goal"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Companion Weather Dialogue */}
+        <div className="theme-bg-accent border theme-border-accent p-3 rounded-2xl text-xs leading-relaxed font-semibold italic theme-text-primary">
+          "{weatherReason || `${profile.companion_name} says: The weather is pleasant today! Keep staying hydrated!`}"
+        </div>
+      </motion.div>
 
     </div>
   );

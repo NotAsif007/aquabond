@@ -171,6 +171,10 @@ function AquaBondApp() {
   const activeThemeId = profile?.color_theme || "sakura";
   const palette = COZY_THEMES[activeThemeId] || COZY_THEMES.sakura;
 
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-theme", activeThemeId);
+  }, [activeThemeId]);
+
   const renderTab = () => {
     switch (activeTab) {
       case "home": return <DashboardTab />;

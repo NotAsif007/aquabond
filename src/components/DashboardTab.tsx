@@ -142,7 +142,7 @@ export const DashboardTab: React.FC = () => {
         </div>
 
         {/* Streak pill indicator */}
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] text-white rounded-full text-xs font-black shadow-xs">
+        <div className="flex items-center gap-1.5 px-3 py-1 theme-bg-gradient text-white rounded-full text-xs font-black shadow-xs">
           🔥 <span className="font-mono">{streakDays}d</span>
         </div>
       </motion.div>
@@ -154,12 +154,12 @@ export const DashboardTab: React.FC = () => {
         transition={{ duration: 0.5, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
         className="glass-card-elevated rounded-[32px] p-5 sm:p-6 flex flex-col justify-between items-center relative overflow-hidden"
       >
-        <div className="w-full flex items-center justify-between border-b border-[#FFF0F2]/50 pb-2.5 mb-3">
+        <div className="w-full flex items-center justify-between border-b theme-border-accent pb-2.5 mb-3">
           <span className="text-xs font-black uppercase text-[#8E8A9A] tracking-wider flex items-center gap-1.5">
-            <User className="w-4 h-4 text-[#FF92A9]" />
+            <User className="w-4 h-4 theme-text-primary" />
             Your Cozy Bottle
           </span>
-          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 bg-[#FFF0F2] text-[#FF92A9] rounded-lg border border-[#FFF0F2]/50 flex items-center gap-1">
+          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
             <Zap className="w-3 h-3" />
             {profile.companion_name}
           </span>
@@ -276,7 +276,7 @@ export const DashboardTab: React.FC = () => {
             <motion.button 
               whileTap={{ scale: 0.95 }}
               onClick={handleCustomLog}
-              className="px-4 py-2 text-xs rounded-2xl bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] text-white font-black shadow-xs hover:from-[#f47f98] hover:to-[#fca5a5] btn-press"
+              className="px-4 py-2 text-xs rounded-2xl theme-bg-gradient text-white font-black shadow-xs hover:opacity-90 btn-press"
             >
               Log Drink
             </motion.button>

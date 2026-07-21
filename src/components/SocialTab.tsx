@@ -60,7 +60,7 @@ export const SocialTab: React.FC = () => {
       {/* Partner Header */}
       <div className="glass-card rounded-[20px] p-3.5 mb-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF92A9] to-[#FAD0C4] flex items-center justify-center text-white font-extrabold text-sm shadow-xs border border-white/40">
+          <div className="w-10 h-10 rounded-2xl theme-bg-gradient flex items-center justify-center text-white font-extrabold text-sm shadow-xs border border-white/40">
             {(partnerProfile?.display_name || "P").charAt(0).toUpperCase()}
           </div>
           <div>
@@ -78,7 +78,7 @@ export const SocialTab: React.FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handlePoke}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFF0F2] text-[#FF92A9] border border-[#FFF0F2] text-xs font-black shadow-3xs"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl theme-bg-accent theme-text-primary border theme-border-accent text-xs font-black shadow-3xs"
         >
           <Heart className="w-3.5 h-3.5 fill-current animate-pulse" />
           Send Love
@@ -128,11 +128,13 @@ export const SocialTab: React.FC = () => {
                     <div
                       className={`max-w-[78%] p-3 rounded-2xl shadow-3xs ${
                         isMine
-                          ? "bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] text-white rounded-br-xs animate-slide-in-right"
+                          ? "theme-bg-gradient text-white rounded-br-xs animate-slide-in-right"
                           : "bg-white/90 text-[#2D283E] border border-white/80 rounded-bl-xs animate-slide-in-left"
                       }`}
                     >
-                      <p className="text-xs font-semibold leading-relaxed break-words">{msg.content}</p>
+                      <p className="text-xs font-semibold leading-relaxed break-words">
+                        {msg.content || (msg.type === 'heart' ? '❤️ Sent a love nudge!' : '❤️ Water reminder')}
+                      </p>
                       <span className={`text-[8px] font-mono font-bold block mt-1 ${isMine ? "text-white/75 text-right" : "text-[#8E8A9A]"}`}>
                         {new Date(msg.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </span>
@@ -194,7 +196,7 @@ export const SocialTab: React.FC = () => {
             disabled={!text.trim()}
             className={`p-2.5 rounded-xl text-white shadow-xs transition-all ${
               text.trim()
-                ? "bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] active:scale-95"
+                ? "theme-bg-gradient active:scale-95"
                 : "bg-slate-200 text-slate-400 cursor-not-allowed"
             }`}
           >

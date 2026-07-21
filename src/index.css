@@ -7,6 +7,85 @@
 }
 
 /* ═══════════════════════════════════════════
+   DYNAMIC THEME COLOR TOKENS
+   ═══════════════════════════════════════════ */
+:root, [data-theme="sakura"] {
+  --theme-primary: #FF92A9;
+  --theme-secondary: #FAD0C4;
+  --theme-accent: #FFF0F2;
+  --theme-accent-border: rgba(255, 240, 242, 0.8);
+  --theme-text: #FF92A9;
+  --theme-shadow-color: rgba(255, 146, 169, 0.25);
+  --theme-gradient: linear-gradient(135deg, #FF92A9 0%, #FAD0C4 100%);
+  --theme-bg-gradient: linear-gradient(135deg, #FDF8F5 0%, #FFF5F6 50%, #FFF0F2 100%);
+}
+
+[data-theme="blue"] {
+  --theme-primary: #4DA8CF;
+  --theme-secondary: #7CB9E8;
+  --theme-accent: #E6F3FF;
+  --theme-accent-border: rgba(230, 243, 255, 0.8);
+  --theme-text: #4DA8CF;
+  --theme-shadow-color: rgba(77, 168, 207, 0.25);
+  --theme-gradient: linear-gradient(135deg, #7CB9E8 0%, #4DA8CF 100%);
+  --theme-bg-gradient: linear-gradient(135deg, #F5F9FC 0%, #EBF5FC 50%, #E6F3FF 100%);
+}
+
+[data-theme="lavender"] {
+  --theme-primary: #8B5CF6;
+  --theme-secondary: #C084FC;
+  --theme-accent: #F3E8FF;
+  --theme-accent-border: rgba(243, 232, 255, 0.8);
+  --theme-text: #8B5CF6;
+  --theme-shadow-color: rgba(139, 92, 246, 0.25);
+  --theme-gradient: linear-gradient(135deg, #A78BFA 0%, #C084FC 100%);
+  --theme-bg-gradient: linear-gradient(135deg, #F8F5FF 0%, #F5F3FF 50%, #FAF5FF 100%);
+}
+
+[data-theme="mint"] {
+  --theme-primary: #059669;
+  --theme-secondary: #6EE7B7;
+  --theme-accent: #ECFDF5;
+  --theme-accent-border: rgba(236, 253, 245, 0.8);
+  --theme-text: #059669;
+  --theme-shadow-color: rgba(5, 150, 105, 0.25);
+  --theme-gradient: linear-gradient(135deg, #34D399 0%, #6EE7B7 100%);
+  --theme-bg-gradient: linear-gradient(135deg, #F5FDFB 0%, #ECFDF5 50%, #F0FDF4 100%);
+}
+
+[data-theme="peach"] {
+  --theme-primary: #EA580C;
+  --theme-secondary: #FCA5A5;
+  --theme-accent: #FFF7ED;
+  --theme-accent-border: rgba(255, 247, 237, 0.8);
+  --theme-text: #EA580C;
+  --theme-shadow-color: rgba(234, 88, 12, 0.25);
+  --theme-gradient: linear-gradient(135deg, #FDBA74 0%, #FCA5A5 100%);
+  --theme-bg-gradient: linear-gradient(135deg, #FFFAF5 0%, #FFF7ED 50%, #FFEDD5 100%);
+}
+
+/* Dynamic theme helper classes */
+.theme-bg-gradient {
+  background: var(--theme-gradient) !important;
+}
+
+.theme-bg-accent {
+  background-color: var(--theme-accent) !important;
+}
+
+.theme-text-primary {
+  color: var(--theme-primary) !important;
+}
+
+.theme-border-primary {
+  border-color: var(--theme-primary) !important;
+}
+
+.theme-border-accent {
+  border-color: var(--theme-accent-border) !important;
+}
+
+/* ═══════════════════════════════════════════
    GLOBAL TOUCH, SCROLLBAR & PERFORMANCE OPTIMIZATIONS
    ═══════════════════════════════════════════ */
 ::-webkit-scrollbar {

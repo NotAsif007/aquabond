@@ -47,7 +47,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 {isActive && (
                   <motion.div
                     layoutId="cute-bubble-pill"
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] shadow-md border border-white/50"
+                    className="absolute inset-0 rounded-full theme-bg-gradient shadow-md border border-white/50"
                     transition={{
                       type: "spring",
                       stiffness: 420,

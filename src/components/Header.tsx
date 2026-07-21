@@ -35,7 +35,7 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
         {/* Profile avatar */}
         <div className="relative shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-tr from-[#FF92A9] to-[#FAD0C4] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md border border-white/40 text-white font-extrabold text-sm select-none">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 theme-bg-gradient rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md border border-white/40 text-white font-extrabold text-sm select-none">
             {initial}
           </div>
           <span className="absolute -bottom-0.5 -right-0.5 block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400 border-2 border-white animate-pulseDot" />
@@ -48,7 +48,7 @@ export const Header: React.FC = () => {
           </h1>
           {/* Hydration summary — visible on desktop */}
           <p className="hidden sm:block text-[10px] text-[#8E8A9A] font-semibold mt-0.5">
-            <span className="font-black text-[#4DA8CF]">{userTodayMl}ml</span> / {baseGoal}ml today
+            <span className="font-black theme-text-primary">{userTodayMl}ml</span> / {baseGoal}ml today
           </p>
         </div>
       </div>
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
       {/* ── Right: Intake pill (mobile) + Streak + Sign-out ────── */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Mobile-only compact intake pill */}
-        <div className="sm:hidden flex items-center gap-1 bg-sky-50 border border-sky-100 text-[#4DA8CF] px-2 py-1 rounded-lg text-[10px] font-black">
+        <div className="sm:hidden flex items-center gap-1 theme-bg-accent border theme-border-accent theme-text-primary px-2 py-1 rounded-lg text-[10px] font-black">
           <Droplet className="w-3 h-3 fill-current" />
           {userTodayMl}ml
         </div>
@@ -65,7 +65,7 @@ export const Header: React.FC = () => {
         <motion.div
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1 sm:gap-1.5 bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] text-white px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-black shadow-xs border border-white/20 select-none cursor-default"
+          className="flex items-center gap-1 sm:gap-1.5 theme-bg-gradient text-white px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-black shadow-xs border border-white/20 select-none cursor-default"
         >
           <Flame className="w-3 sm:w-4 h-3 sm:h-4 text-white animate-pulse" />
           <span className="font-mono">{streakDays}</span>
