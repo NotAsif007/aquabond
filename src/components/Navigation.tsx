@@ -24,12 +24,38 @@ export const Navigation: React.FC<NavigationProps> = ({
   accentClass,
   unreadCount,
 }) => {
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        setIsKeyboardOpen(true);
+      }
+    };
+    const handleFocusOut = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        setIsKeyboardOpen(false);
+      }
+    };
+
+    window.addEventListener("focusin", handleFocusIn);
+    window.addEventListener("focusout", handleFocusOut);
+    return () => {
+      window.removeEventListener("focusin", handleFocusIn);
+      window.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
+
   return (
     <>
       {/* ═══════════════════════════════════════════
           CUTE FLOATING BUBBLE BOTTOM NAVIGATION BAR (Mobile)
           ═══════════════════════════════════════════ */}
-      <nav className="sm:hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-50 bg-white/85 backdrop-blur-2xl rounded-full p-1.5 shadow-[0_8px_32px_rgba(255,146,169,0.22)] border border-white/90">
+      <nav className={`sm:hidden fixed bottom-4 inset-x-4 max-w-md mx-auto z-50 bg-white/85 backdrop-blur-2xl rounded-full p-1.5 shadow-[0_8px_32px_rgba(255,146,169,0.22)] border border-white/90 transition-all duration-300 ease-out ${
+        isKeyboardOpen ? 'opacity-0 translate-y-16 pointer-events-none' : 'opacity-100 translate-y-0 pointer-events-auto'
+      }`}>
         <div className="flex items-center justify-between relative">
           {navItems.map((item) => {
             const Icon = item.icon;
