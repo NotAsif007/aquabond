@@ -124,6 +124,13 @@ function AquaBondApp() {
     return age < 5 * 60 * 1000;
   }).length;
 
+  const activeThemeId = profile?.color_theme || "sakura";
+  const palette = COZY_THEMES[activeThemeId] || COZY_THEMES.sakura;
+
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-theme", activeThemeId);
+  }, [activeThemeId]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-tr from-[#FFF5F6] via-[#FFFDFB] to-[#E6F3FF] gap-3 relative">
@@ -167,13 +174,6 @@ function AquaBondApp() {
       </>
     );
   }
-
-  const activeThemeId = profile?.color_theme || "sakura";
-  const palette = COZY_THEMES[activeThemeId] || COZY_THEMES.sakura;
-
-  React.useEffect(() => {
-    document.documentElement.setAttribute("data-theme", activeThemeId);
-  }, [activeThemeId]);
 
   const renderTab = () => {
     switch (activeTab) {

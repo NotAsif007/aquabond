@@ -133,7 +133,7 @@ export const SocialTab: React.FC = () => {
                       }`}
                     >
                       <p className="text-xs font-semibold leading-relaxed break-words">
-                        {msg.content || (msg.type === 'heart' ? '❤️ Sent a love nudge!' : '❤️ Water reminder')}
+                        {msg.content || ((msg as any).type === 'heart' ? '❤️ Sent a love nudge!' : '❤️ Sent a love nudge!')}
                       </p>
                       <span className={`text-[8px] font-mono font-bold block mt-1 ${isMine ? "text-white/75 text-right" : "text-[#8E8A9A]"}`}>
                         {new Date(msg.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
