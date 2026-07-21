@@ -210,7 +210,7 @@ function AquaBondApp() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="flex-1 w-full glass-card-elevated rounded-[24px] sm:rounded-[32px] p-4 sm:p-6 md:p-8 min-h-0 flex flex-col justify-between relative overflow-hidden select-none"
+            className={`flex-1 w-full glass-card-elevated rounded-[24px] sm:rounded-[32px] ${activeTab === 'social' ? 'p-2.5 sm:p-6' : 'p-4 sm:p-6'} md:p-8 min-h-0 flex flex-col justify-between relative overflow-hidden select-none`}
           >
             <AnimatePresence mode="wait">
               <motion.div

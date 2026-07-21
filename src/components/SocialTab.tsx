@@ -158,7 +158,7 @@ export const SocialTab: React.FC = () => {
       </div>
 
       {/* Input bar */}
-      <div className="mt-3 shrink-0 relative">
+      <div className="mt-2 pb-2 sm:pb-0 shrink-0 relative">
         {/* Sticker picker popover */}
         <AnimatePresence>
           {showStickers && (
