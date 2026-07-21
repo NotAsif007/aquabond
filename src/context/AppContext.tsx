@@ -948,6 +948,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setTimeout(() => playLevelUpSound(), 600);
     }
 
+    const localLog: WaterLog = {
+      id: `log-${Date.now()}`,
+      user_id: profile.id,
+      amount_ml: amountMl,
+      timestamp: new Date().toISOString(),
+      measurement_unit: profile.unit || 'ml',
+      source_device: 'web',
+      cup_type: cupType
+    };
+
+    // Optimistically update local logs & profile XP/level instantly!
+    setLogs(prev => [localLog, ...prev]);
+    setProfile(prev => prev ? { ...prev, xp: newXp, level: newLevel, last_drank_at: localLog.timestamp } : null);
+
     if (supabaseMode) {
       const supabase = getSupabase();
       if (!supabase) return;
@@ -972,8 +986,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             xp: newXp,
             level: newLevel,
             last_drank_at: new Date().toISOString(),
-            // Streaks are updated locally for simplicity, or calculated
-            current_streak: profile.current_streak === 0 ? 1 : profile.current_streak // Simple increment for demo sync
+            current_streak: profile.current_streak === 0 ? 1 : profile.current_streak
           })
           .eq("id", profile.id);
         if (profErr) throw profErr;

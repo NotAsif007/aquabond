@@ -224,9 +224,6 @@ function AquaBondApp() {
         </div>
       </div>
 
-      {/* Quick-Add FAB — available on all tabs */}
-      <QuickAddFAB />
-
       <SupabaseConfigModal isOpen={isDbModalOpen} onClose={() => setIsDbModalOpen(false)} />
     </div>
   );
