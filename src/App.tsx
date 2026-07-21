@@ -11,7 +11,7 @@ import { ProgressTab } from "./components/ProgressTab";
 import { SocialTab } from "./components/SocialTab";
 import { ThemesTab } from "./components/ThemesTab";
 import { SettingsTab } from "./components/SettingsTab";
-import { QuickAddFAB } from "./components/QuickAddFAB";
+import { OnboardingModal } from "./components/OnboardingModal";
 import { Droplet } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -126,6 +126,7 @@ function AquaBondApp() {
 
   const activeThemeId = profile?.color_theme || "sakura";
   const palette = COZY_THEMES[activeThemeId] || COZY_THEMES.sakura;
+  const needsOnboarding = Boolean(profile && (!profile.display_name || profile.display_name === "User" || profile.display_name === "Google User" || !profile.companion_name));
 
   React.useEffect(() => {
     document.documentElement.setAttribute("data-theme", activeThemeId);
@@ -228,6 +229,7 @@ function AquaBondApp() {
         </div>
       </div>
 
+      {needsOnboarding && <OnboardingModal />}
       <SupabaseConfigModal isOpen={isDbModalOpen} onClose={() => setIsDbModalOpen(false)} />
     </div>
   );

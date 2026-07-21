@@ -86,6 +86,7 @@ interface AppContextType {
   authError: string | null;
   signUp: (email: string, password: string, displayName: string, companionType: string, companionName: string) => Promise<boolean>;
   signIn: (email: string, password: string) => Promise<boolean>;
+  signInWithOAuth: (provider: 'google' | 'discord') => Promise<boolean>;
   signOut: () => Promise<void>;
   
   // Drink Operations
@@ -852,6 +853,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  // --- Auth: Social OAuth (Google & Discord) ---
+  const signInWithOAuth = async (provider: 'google' | 'discord'): Promise<boolean> => {
+    setAuthError(null);
+    if (!supabaseMode) {
+      setSupabaseMode(false);
+      return true;
+    }
+
+    const supabase = getSupabase();
+    if (!supabase) return false;
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (error) throw error;
+      return true;
+
+    } catch (err: any) {
+      console.error(`${provider} OAuth error:`, err);
+      setAuthError(err.message || `Failed to sign in with ${provider}.`);
+      return false;
+    }
+  };
+
   // --- Auth: Sign Out ---
   const signOut = async () => {
     if (supabaseMode) {
@@ -1610,6 +1640,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       authError,
       signUp,
       signIn,
+      signInWithOAuth,
       signOut,
       
       logs,

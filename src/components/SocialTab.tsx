@@ -188,7 +188,7 @@ export const SocialTab: React.FC = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Type a cozy message..."
-            className="flex-1 bg-white/90 border border-white/80 focus:border-[#FF92A9] rounded-xl px-3.5 py-2.5 text-xs font-semibold text-[#2D283E] focus:outline-none focus-ring shadow-inner"
+            className="flex-1 bg-white/90 border border-white/80 focus:border-[#FF92A9] rounded-xl px-3.5 py-2.5 text-base sm:text-xs font-semibold text-[#2D283E] focus:outline-none focus-ring shadow-inner"
           />
 
           <button
