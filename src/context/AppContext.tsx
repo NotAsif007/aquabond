@@ -448,18 +448,55 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return;
       }
 
-      // Fetch user profile
-      const { data: userProfile, error: profileErr } = await supabase
+      // Fetch user profile (try by ID first, then fallback to email)
+      let { data: userProfile } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", session.user.id)
-        .single();
+        .maybeSingle();
 
-      if (profileErr || !userProfile) {
-        // If profile doesn't exist yet but user is authenticated (should be handled on sign up)
-        setProfile(null);
-        setLoading(false);
-        return;
+      if (!userProfile && session.user.email) {
+        // Fallback: search by email if ID desynced
+        const { data: profileByEmail } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("email", session.user.email)
+          .maybeSingle();
+
+        if (profileByEmail) {
+          // Link profile to current auth session user ID
+          await supabase
+            .from("profiles")
+            .update({ id: session.user.id })
+            .eq("email", session.user.email);
+          userProfile = { ...profileByEmail, id: session.user.id };
+        }
+      }
+
+      if (!userProfile) {
+        // Auto-create default profile if missing
+        const defaultProf = {
+          id: session.user.id,
+          email: session.user.email,
+          display_name: session.user.email?.split("@")[0] || "Hydrator",
+          companion_name: "Drop",
+          companion_type: "drop",
+          daily_goal_ml: 2000,
+          unit: "ml",
+          timezone: "UTC",
+          weather_goal_enabled: false,
+          color_theme: "sakura",
+          skin_id: "default",
+          outfit_id: "none",
+          xp: 0,
+          level: 1,
+          current_streak: 0,
+          longest_streak: 0,
+          unlocked_skins: ["default"],
+          unlocked_outfits: ["none"]
+        };
+        await supabase.from("profiles").upsert([defaultProf]);
+        userProfile = defaultProf;
       }
 
       const prof = userProfile as Profile;
@@ -775,7 +812,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     } catch (err: any) {
       console.error("Sign up error:", err);
-      setAuthError(err.message || "Failed to sign up user.");
+      const msg = err.message || "";
+      if (msg.includes("profiles_email_key") || msg.includes("already registered") || msg.includes("unique constraint")) {
+        setAuthError("This email is already registered! Please click 'Already registered? Sign In here' below to sign in.");
+      } else {
+        setAuthError(msg || "Failed to sign up user.");
+      }
       return false;
     }
   };
