@@ -67,6 +67,8 @@ const COZY_THEMES: Record<string, CozyPalette> = {
   }
 };
 
+const NAV_TABS = ["home", "analytics", "partner", "social", "progress", "shop", "settings"];
+
 // Page transition variants
 const pageVariants = {
   initial: { opacity: 0, y: 10, scale: 0.99 },
@@ -85,7 +87,36 @@ function AquaBondApp() {
   const [activeTab, setActiveTab] = useState<string>("home");
   const [isDbModalOpen, setIsDbModalOpen] = useState<boolean>(false);
 
-  // Count unread messages (any messages in last 5 min from partner)
+  // Swipe gesture detection states
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    const currentIndex = NAV_TABS.indexOf(activeTab);
+    if (isLeftSwipe && currentIndex < NAV_TABS.length - 1) {
+      setActiveTab(NAV_TABS[currentIndex + 1]);
+    } else if (isRightSwipe && currentIndex > 0) {
+      setActiveTab(NAV_TABS[currentIndex - 1]);
+    }
+  };
+
+  // Count unread messages
   const unreadCount = messages.filter(m => {
     if (!profile) return false;
     if (m.sender_id === profile.id) return false;
@@ -112,7 +143,6 @@ function AquaBondApp() {
             <Droplet className="w-7 h-7 text-white" />
           </motion.div>
 
-          {/* Perfectly centered ripple ring behind icon */}
           <motion.div
             animate={{ scale: [1, 2.2], opacity: [0.4, 0] }}
             transition={{ repeat: Infinity, duration: 1.4, ease: "easeOut" }}
@@ -172,8 +202,13 @@ function AquaBondApp() {
             unreadCount={unreadCount}
           />
 
-          {/* Main Content with page transitions */}
-          <main className="flex-1 w-full glass-card-elevated rounded-[24px] sm:rounded-[32px] p-4 sm:p-6 md:p-8 min-h-[480px] relative overflow-hidden">
+          {/* Main Content with touch swipe gestures and page transitions */}
+          <main 
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="flex-1 w-full glass-card-elevated rounded-[24px] sm:rounded-[32px] p-4 sm:p-6 md:p-8 min-h-[480px] relative overflow-hidden select-none"
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab}

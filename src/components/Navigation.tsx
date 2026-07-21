@@ -9,7 +9,17 @@ interface NavigationProps {
   unreadCount?: number;
 }
 
-const navItems = [
+// 5 core mobile bottom tabs for spacious, professional layout
+const mobileNavItems = [
+  { id: "home", label: "Home", icon: Droplet },
+  { id: "analytics", label: "Dashboard", icon: LayoutDashboard },
+  { id: "partner", label: "Partner", icon: Users },
+  { id: "social", label: "Chat", icon: MessageCircle },
+  { id: "settings", label: "Settings", icon: Settings },
+] as const;
+
+// Full 7 desktop sidebar tabs
+const desktopNavItems = [
   { id: "home", label: "Home", icon: Droplet },
   { id: "analytics", label: "Dashboard", icon: LayoutDashboard },
   { id: "partner", label: "Partner", icon: Users },
@@ -28,11 +38,11 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <>
       {/* ═══════════════════════════════════════════
-          MOBILE BOTTOM TAB BAR
+          MOBILE BOTTOM TAB BAR (Spacious & Clean)
           ═══════════════════════════════════════════ */}
-      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/90 backdrop-blur-xl border-t border-white/60 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] safe-area-pb">
-        <div className="flex items-center justify-around py-1 px-0.5 relative max-w-md mx-auto">
-          {navItems.map((item) => {
+      <nav className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-2xl border-t border-slate-200/60 shadow-[0_-6px_24px_rgba(0,0,0,0.06)] safe-area-pb">
+        <div className="flex items-center justify-between py-1.5 px-3 max-w-md mx-auto">
+          {mobileNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             const showBadge = item.id === "social" && (unreadCount ?? 0) > 0;
@@ -41,39 +51,41 @@ export const Navigation: React.FC<NavigationProps> = ({
               <motion.button
                 key={item.id}
                 onClick={() => onChangeTab(item.id)}
-                whileTap={{ scale: 0.8 }}
-                className="relative flex flex-col items-center gap-0.5 py-1 px-1 z-10 min-w-[42px]"
+                whileTap={{ scale: 0.88 }}
+                className={`relative flex flex-col items-center justify-center py-1.5 px-2.5 rounded-2xl transition-all duration-200 z-10 flex-1 ${
+                  isActive ? "bg-[#FFF0F2] text-[#FF92A9]" : "text-[#8E8A9A] hover:text-[#2D283E]"
+                }`}
               >
-                {/* Sliding indicator pill */}
+                {/* Active Indicator Glow Pill */}
                 {isActive && (
                   <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute -top-1 left-1/2 -translate-x-1/2 w-7 h-1 bg-gradient-to-r from-[#FF92A9] to-[#FAD0C4] rounded-full"
+                    layoutId="mobile-nav-pill"
+                    className="absolute inset-0 rounded-2xl bg-[#FFF0F2] border border-[#FFF0F2]/80 shadow-3xs"
                     transition={{
                       type: "spring",
-                      stiffness: 380,
+                      stiffness: 400,
                       damping: 30,
                     }}
                   />
                 )}
 
                 {/* Icon wrapper */}
-                <div className="relative">
+                <div className="relative z-10 mb-0.5">
                   <Icon
-                    className={`w-4.5 h-4.5 transition-all duration-200 ${
-                      isActive ? "text-[#FF92A9] scale-110" : "text-[#8E8A9A]"
+                    className={`w-5 h-5 transition-transform duration-200 ${
+                      isActive ? "scale-110 text-[#FF92A9]" : "text-[#8E8A9A]"
                     }`}
                     fill={isActive && item.id === "home" ? "currentColor" : "none"}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
                   {/* Notification badge */}
                   {showBadge && (
-                    <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-red-500 border border-white animate-pulseDot" />
+                    <span className="absolute -top-1 -right-1.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulseDot" />
                   )}
                 </div>
 
                 <span
-                  className={`text-[8px] font-bold tracking-wide uppercase leading-none transition-colors duration-200 ${
+                  className={`relative z-10 text-[9.5px] font-extrabold tracking-tight leading-none transition-colors duration-200 ${
                     isActive ? "text-[#FF92A9]" : "text-[#8E8A9A]"
                   }`}
                 >
@@ -93,7 +105,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           Navigation
         </span>
 
-        {navItems.map((item) => {
+        {desktopNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
           const showBadge = item.id === "social" && (unreadCount ?? 0) > 0;
