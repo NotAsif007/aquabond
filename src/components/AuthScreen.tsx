@@ -82,21 +82,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onOpenDbConfig }) => {
           <p className="text-xs text-[#8E8A9A] font-semibold mt-1">A Cozy Couple's Hydration Tracker</p>
         </div>
 
-        {/* CONNECTION STATE HEADER */}
-        <div className="mb-4 bg-white/60 p-2.5 rounded-2xl border border-slate-100 flex items-center justify-between text-xs font-semibold">
-          <span className="text-[#8E8A9A]">Connection State:</span>
-          <button 
-            type="button"
-            onClick={onOpenDbConfig}
-            className={`px-2.5 py-0.5 rounded-lg border text-[10px] font-bold uppercase transition-all ${
-              supabaseMode 
-                ? "bg-emerald-50 border-emerald-100 text-emerald-700 hover:bg-emerald-100" 
-                : "bg-amber-50 border-amber-100 text-amber-700 hover:bg-amber-100"
-            }`}
-          >
-            {supabaseMode ? "Supabase Mode 🟢" : "Demo Mode 🟡"}
-          </button>
-        </div>
+
 
         {/* FORM ERROR / BACKEND ERROR DISPLAY */}
         {(formError || authError) && (

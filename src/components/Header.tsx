@@ -45,9 +45,6 @@ export const Header: React.FC = () => {
         <div className="min-w-0">
           <h1 className="text-base sm:text-xl font-extrabold tracking-tight text-[#2D283E] flex items-center gap-1.5 leading-none">
             AquaBond
-            <span className="hidden sm:inline text-[9px] tracking-wider px-2.5 py-0.5 bg-[#FFF0F2] text-[#FF92A9] font-mono font-bold rounded-full uppercase border border-[#FFF0F2]/50">
-              {supabaseMode ? "Live" : "Demo"}
-            </span>
           </h1>
           {/* Hydration summary — visible on desktop */}
           <p className="hidden sm:block text-[10px] text-[#8E8A9A] font-semibold mt-0.5">

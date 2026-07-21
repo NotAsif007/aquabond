@@ -95,30 +95,35 @@ function AquaBondApp() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-tr from-[#FFF5F6] via-[#FFFDFB] to-[#E6F3FF] gap-4">
-        <motion.div
-          animate={{ 
-            y: [0, -16, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ 
-            repeat: Infinity, 
-            duration: 1.2, 
-            ease: "easeInOut" 
-          }}
-          className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF92A9] to-[#FAD0C4] flex items-center justify-center shadow-lg border border-white/50"
-        >
-          <Droplet className="w-7 h-7 text-white" />
-        </motion.div>
-        <div className="flex flex-col items-center gap-1.5">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-tr from-[#FFF5F6] via-[#FFFDFB] to-[#E6F3FF] gap-3 relative">
+        <div className="relative flex items-center justify-center">
+          <motion.div
+            animate={{ 
+              y: [0, -10, 0],
+              scale: [1, 1.05, 1]
+            }}
+            transition={{ 
+              repeat: Infinity, 
+              duration: 1.4, 
+              ease: "easeInOut" 
+            }}
+            className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF92A9] to-[#FAD0C4] flex items-center justify-center shadow-lg border border-white/50 relative z-10"
+          >
+            <Droplet className="w-7 h-7 text-white" />
+          </motion.div>
+
+          {/* Perfectly centered ripple ring behind icon */}
+          <motion.div
+            animate={{ scale: [1, 2.2], opacity: [0.4, 0] }}
+            transition={{ repeat: Infinity, duration: 1.4, ease: "easeOut" }}
+            className="absolute inset-0 rounded-2xl border-2 border-[#FF92A9]"
+          />
+        </div>
+
+        <div className="flex flex-col items-center gap-1 text-center">
           <span className="text-sm font-extrabold text-[#2D283E] tracking-wide">AquaBond</span>
           <span className="text-[10px] font-semibold text-[#8E8A9A] animate-pulse">Waking up companion...</span>
         </div>
-        <motion.div
-          animate={{ scale: [1, 2.5], opacity: [0.3, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: "easeOut" }}
-          className="absolute w-14 h-14 rounded-2xl border-2 border-[#FF92A9]"
-        />
       </div>
     );
   }
