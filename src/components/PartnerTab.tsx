@@ -126,7 +126,7 @@ export const PartnerTab: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto relative min-h-[500px]">
+    <div className="flex-1 flex flex-col justify-between max-w-2xl mx-auto w-full space-y-4 relative h-full">
       
       {/* Full-screen nudge flash overlay */}
       <AnimatePresence>

@@ -56,7 +56,7 @@ export const SocialTab: React.FC = () => {
   if (!profile) return null;
 
   return (
-    <div className="flex flex-col h-[520px] max-w-2xl mx-auto relative">
+    <div className="flex-1 flex flex-col h-full w-full max-w-2xl mx-auto relative justify-between">
       {/* Partner Header */}
       <div className="glass-card rounded-[20px] p-3.5 mb-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">

@@ -122,7 +122,7 @@ export const DashboardTab: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-4 max-w-xl mx-auto">
+    <div className="flex-1 flex flex-col justify-between max-w-xl mx-auto w-full space-y-4">
       
       {/* Compact Daily Greeting */}
       <motion.div
