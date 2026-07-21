@@ -11,11 +11,34 @@ export const SocialTab: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [keyboardOffset, setKeyboardOffset] = useState<number>(0);
+
   const STICKERS = ["💧", "🐰", "🐧", "🐱", "✨", "💖", "🌊", "🎉"];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Track virtual keyboard height on mobile like Instagram DM
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+
+    const handleViewportChange = () => {
+      if (window.visualViewport) {
+        const offset = window.innerHeight - window.visualViewport.height;
+        setKeyboardOffset(Math.max(0, offset));
+      }
+    };
+
+    window.visualViewport.addEventListener("resize", handleViewportChange);
+    window.visualViewport.addEventListener("scroll", handleViewportChange);
+    handleViewportChange();
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", handleViewportChange);
+      window.visualViewport?.removeEventListener("scroll", handleViewportChange);
+    };
+  }, []);
 
   // Auto-focus chat input on tab mount so soft keyboard opens by default
   useEffect(() => {
@@ -157,8 +180,11 @@ export const SocialTab: React.FC = () => {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input bar */}
-      <div className="mt-2 pb-6 sm:pb-1 mb-2 sm:mb-0 shrink-0 relative">
+      {/* Input bar — moves dynamically with soft keyboard like Instagram DM */}
+      <div 
+        style={{ transform: keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : 'none' }}
+        className="mt-2 pb-3 sm:pb-1 shrink-0 relative transition-transform duration-100 ease-out"
+      >
         {/* Sticker picker popover */}
         <AnimatePresence>
           {showStickers && (
