@@ -48,6 +48,18 @@ export const Navigation: React.FC<NavigationProps> = ({
     };
   }, []);
 
+  const handleTabClick = (tabId: string) => {
+    onChangeTab(tabId);
+    if (tabId === "social") {
+      setTimeout(() => {
+        const input = document.querySelector('input[placeholder*="Type a cozy message"]') as HTMLInputElement;
+        if (input) {
+          input.focus();
+        }
+      }, 50);
+    }
+  };
+
   return (
     <>
       {/* ═══════════════════════════════════════════
@@ -65,7 +77,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             return (
               <motion.button
                 key={item.id}
-                onClick={() => onChangeTab(item.id)}
+                onClick={() => handleTabClick(item.id)}
                 whileTap={{ scale: 0.86 }}
                 className="relative flex flex-col items-center justify-center py-2 px-3 rounded-full flex-1 z-10 transition-colors"
               >
@@ -126,7 +138,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           return (
             <motion.button
               key={item.id}
-              onClick={() => onChangeTab(item.id)}
+              onClick={() => handleTabClick(item.id)}
               whileTap={{ scale: 0.92 }}
               className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 rounded-2xl text-xs font-bold transition-colors duration-200 ${
                 isActive
