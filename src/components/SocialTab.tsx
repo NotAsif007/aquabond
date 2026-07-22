@@ -154,16 +154,16 @@ export const SocialTab: React.FC = () => {
                 return (
                   <motion.div
                     key={msg.id}
-                    initial={{ opacity: 0, x: isMine ? 16 : -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 25 }}
                     className={`flex ${isMine ? "justify-end" : "justify-start"}`}
                   >
                     <div
                       className={`max-w-[78%] p-3 rounded-2xl shadow-3xs ${
                         isMine
-                          ? "theme-bg-gradient text-white rounded-br-xs animate-slide-in-right"
-                          : "bg-white/90 text-[#2D283E] border border-white/80 rounded-bl-xs animate-slide-in-left"
+                          ? "theme-bg-gradient text-white rounded-br-xs"
+                          : "bg-white/90 text-[#2D283E] border border-white/80 rounded-bl-xs"
                       }`}
                     >
                       <p className="text-xs font-semibold leading-relaxed break-words">

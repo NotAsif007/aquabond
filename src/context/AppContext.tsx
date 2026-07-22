@@ -396,7 +396,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               const tempIndex = prev.findIndex(m => m.id.startsWith("msg-") && m.content === msg.content);
               if (tempIndex !== -1) {
                 const next = [...prev];
-                next[tempIndex] = msg;
+                next[tempIndex] = { ...msg, id: prev[tempIndex].id };
                 return next;
               }
               return prev;
