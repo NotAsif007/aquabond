@@ -94,12 +94,7 @@
   }
 }
 
-body:has(input:focus), body:has(textarea:focus) {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+
 
 /* ═══════════════════════════════════════════
    GLOBAL TOUCH, SCROLLBAR & PERFORMANCE OPTIMIZATIONS

@@ -40,14 +40,6 @@ export const SocialTab: React.FC = () => {
     };
   }, []);
 
-  // Auto-focus chat input on tab mount so soft keyboard opens by default
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      inputRef.current?.focus();
-    }, 150);
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
@@ -190,11 +182,8 @@ export const SocialTab: React.FC = () => {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input bar — moves dynamically with soft keyboard like Instagram DM */}
-      <div 
-        style={{ transform: keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : 'none' }}
-        className="mt-2 pb-3 sm:pb-1 shrink-0 relative transition-transform duration-100 ease-out"
-      >
+      {/* Input bar */}
+      <div className="mt-2 shrink-0 relative">
         {/* Sticker picker popover */}
         <AnimatePresence>
           {showStickers && (
@@ -230,7 +219,6 @@ export const SocialTab: React.FC = () => {
 
           <input
             ref={inputRef}
-            autoFocus
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}

@@ -58,14 +58,6 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   const handleTabClick = (tabId: string) => {
     onChangeTab(tabId);
-    if (tabId === "social") {
-      setTimeout(() => {
-        const input = document.querySelector('input[placeholder*="Type a cozy message"]') as HTMLInputElement;
-        if (input) {
-          input.focus();
-        }
-      }, 50);
-    }
   };
 
   return (
