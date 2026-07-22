@@ -176,17 +176,10 @@ export const DashboardTab: React.FC = () => {
             <User className="w-4 h-4 theme-text-primary" />
             Your Cozy Bottle
           </span>
-          <div className="flex items-center gap-1.5">
-            {mostRecentLog && (
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-200/60 flex items-center gap-1">
-                💧 +{mostRecentLog.amount_ml}ml ({getTimeAgo(mostRecentLog.timestamp)})
-              </span>
-            )}
-            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
-              <Zap className="w-3 h-3" />
-              {profile.companion_name}
-            </span>
-          </div>
+          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
+            <Zap className="w-3 h-3" />
+            {profile.companion_name}
+          </span>
         </div>
 
         {/* Companion Bubble & Avatar */}
@@ -251,15 +244,9 @@ export const DashboardTab: React.FC = () => {
             >
               {displayPercent}%
             </motion.span>
-            <span className="text-[10px] font-mono text-[#4A4458] font-bold bg-white/60 backdrop-blur-xs px-2.5 py-0.5 rounded-full mt-1.5 border border-white/40 shadow-3xs flex items-center gap-1">
-              <Droplet className="w-3 h-3 text-[#4DA8CF] fill-current" />
+            <span className="text-[10px] font-mono text-[#4A4458] font-bold bg-white/50 backdrop-blur-xs px-2.5 py-0.5 rounded-full mt-1.5 border border-white/40 shadow-3xs">
               {userTodayMl} / {activeGoal} ml
             </span>
-            {mostRecentLog && (
-              <span className="text-[9px] font-mono font-semibold text-[#8E8A9A] mt-1 bg-white/40 px-2 py-0.5 rounded-md">
-                Last Sip: +{mostRecentLog.amount_ml}ml ({getTimeAgo(mostRecentLog.timestamp)})
-              </span>
-            )}
           </div>
         </div>
 
