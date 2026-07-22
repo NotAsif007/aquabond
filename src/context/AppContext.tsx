@@ -388,13 +388,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         (payload) => {
           const msg = payload.new as CoupleMessage;
           setMessages(prev => {
-            const isDuplicate = prev.some(m => 
-              m.id === msg.id || 
-              (m.sender_id === msg.sender_id && m.content === msg.content && Math.abs(new Date(m.timestamp || Date.now()).getTime() - new Date(msg.timestamp || Date.now()).getTime()) < 5000)
-            );
-            if (isDuplicate) {
-              return prev.map(m => (m.sender_id === msg.sender_id && m.content === msg.content) ? msg : m);
+            // If already present by ID, ignore
+            if (prev.some(m => m.id === msg.id)) return prev;
+            
+            // If sent by current user, replace matching temporary local message or ignore if already present
+            if (msg.sender_id === profile?.id) {
+              const tempIndex = prev.findIndex(m => m.id.startsWith("msg-") && m.content === msg.content);
+              if (tempIndex !== -1) {
+                const next = [...prev];
+                next[tempIndex] = msg;
+                return next;
+              }
+              return prev;
             }
+
+            // Partner message: append
             return [...prev, msg];
           });
 
@@ -1221,7 +1229,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     else if (newXp >= 150 && profile.level < 2) newLevel = 2;
 
     const localMsg: CoupleMessage = {
-      id: `msg-${Date.now()}`,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       couple_id: coupleId,
       sender_id: profile.id,
       type,
@@ -1299,7 +1307,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     playPlop();
 
     const localMsg: CoupleMessage = {
-      id: `msg-${Date.now()}`,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       couple_id: coupleId,
       sender_id: profile.id,
       type: 'custom_cheer',
