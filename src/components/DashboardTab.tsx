@@ -53,6 +53,23 @@ export const DashboardTab: React.FC = () => {
   const userPercent = Math.min(100, Math.round((userTodayMl / activeGoal) * 100));
   const streakDays = couple ? couple.couple_streak : profile.current_streak;
 
+  // Most recent log calculation
+  const mostRecentLog = useMemo(() => {
+    if (!logs || logs.length === 0) return null;
+    return [...logs].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
+  }, [logs]);
+
+  const getTimeAgo = (timestamp?: string) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const mins = Math.floor((Date.now() - date.getTime()) / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
   // Animated counter effect
   useEffect(() => {
     const start = prevPercentRef.current;
@@ -159,10 +176,17 @@ export const DashboardTab: React.FC = () => {
             <User className="w-4 h-4 theme-text-primary" />
             Your Cozy Bottle
           </span>
-          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
-            <Zap className="w-3 h-3" />
-            {profile.companion_name}
-          </span>
+          <div className="flex items-center gap-1.5">
+            {mostRecentLog && (
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-200/60 flex items-center gap-1">
+                💧 +{mostRecentLog.amount_ml}ml ({getTimeAgo(mostRecentLog.timestamp)})
+              </span>
+            )}
+            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
+              <Zap className="w-3 h-3" />
+              {profile.companion_name}
+            </span>
+          </div>
         </div>
 
         {/* Companion Bubble & Avatar */}
@@ -227,9 +251,15 @@ export const DashboardTab: React.FC = () => {
             >
               {displayPercent}%
             </motion.span>
-            <span className="text-[10px] font-mono text-[#4A4458] font-bold bg-white/50 backdrop-blur-xs px-2.5 py-0.5 rounded-full mt-1.5 border border-white/40 shadow-3xs">
+            <span className="text-[10px] font-mono text-[#4A4458] font-bold bg-white/60 backdrop-blur-xs px-2.5 py-0.5 rounded-full mt-1.5 border border-white/40 shadow-3xs flex items-center gap-1">
+              <Droplet className="w-3 h-3 text-[#4DA8CF] fill-current" />
               {userTodayMl} / {activeGoal} ml
             </span>
+            {mostRecentLog && (
+              <span className="text-[9px] font-mono font-semibold text-[#8E8A9A] mt-1 bg-white/40 px-2 py-0.5 rounded-md">
+                Last Sip: +{mostRecentLog.amount_ml}ml ({getTimeAgo(mostRecentLog.timestamp)})
+              </span>
+            )}
           </div>
         </div>
 

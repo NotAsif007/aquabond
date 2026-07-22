@@ -19,12 +19,13 @@ export const HydrationWidget: React.FC = () => {
   const userTodayMl = logs.reduce((sum, l) => sum + l.amount_ml, 0);
   const percent = Math.min(100, Math.round((userTodayMl / Math.max(baseGoal, 1)) * 100));
 
-  // Time since last drink
-  const lastDrinkTime = useMemo(() => {
-    if (logs.length === 0) return null;
-    return new Date(logs[0].timestamp).getTime();
+  // Time since last drink — sort logs descending to find most recent log
+  const mostRecentLog = useMemo(() => {
+    if (!logs || logs.length === 0) return null;
+    return [...logs].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
   }, [logs]);
 
+  const lastDrinkTime = mostRecentLog ? new Date(mostRecentLog.timestamp).getTime() : null;
   const timeSinceLastDrink = lastDrinkTime ? now - lastDrinkTime : null;
 
   const getTimeSinceLabel = (ms: number | null) => {
