@@ -195,14 +195,14 @@ function AquaBondApp() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col justify-between bg-gradient-to-tr ${palette.bgGradient} transition-all duration-1000 ease-out pt-3 sm:py-6 px-3 sm:px-8 pb-20 sm:pb-6 font-sans antialiased text-[#4A4458] relative`}>
-      <div className="max-w-7xl w-full mx-auto space-y-3 sm:space-y-6 relative z-10 flex-1 flex flex-col">
+    <div className={`h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-gradient-to-tr ${palette.bgGradient} transition-all duration-1000 ease-out pt-3 sm:py-6 px-3 sm:px-8 pb-20 sm:pb-6 font-sans antialiased text-[#4A4458] relative overflow-hidden`}>
+      <div className="max-w-7xl w-full mx-auto space-y-3 sm:space-y-6 relative z-10 flex-1 flex flex-col min-h-0 overflow-hidden">
         
         {/* Header */}
         <Header />
 
         {/* Layout Grid */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-stretch flex-1">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-stretch flex-1 min-h-0 overflow-hidden">
           
           {/* Navigation */}
           <Navigation 
@@ -217,7 +217,7 @@ function AquaBondApp() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="flex-1 w-full glass-card-elevated rounded-[24px] sm:rounded-[32px] p-4 sm:p-6 md:p-8 min-h-0 flex flex-col justify-between relative select-none"
+            className="flex-1 w-full glass-card-elevated rounded-[24px] sm:rounded-[32px] p-3.5 sm:p-6 md:p-8 min-h-0 flex flex-col justify-between relative overflow-hidden select-none"
           >
             <AnimatePresence mode="wait">
               <motion.div

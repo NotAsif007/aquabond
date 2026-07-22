@@ -90,9 +90,9 @@ export const SocialTab: React.FC = () => {
   if (!profile) return null;
 
   return (
-    <div className="flex-1 flex flex-col h-full w-full max-w-2xl mx-auto relative justify-between">
+    <div className="flex-1 flex flex-col h-full w-full max-w-2xl mx-auto relative min-h-0 overflow-hidden">
       {/* Partner Header */}
-      <div className="glass-card rounded-[20px] p-3.5 mb-3 flex items-center justify-between shrink-0">
+      <div className="glass-card rounded-[20px] p-3.5 mb-2.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl theme-bg-gradient flex items-center justify-center text-white font-extrabold text-sm shadow-xs border border-white/40">
             {(partnerProfile?.display_name || "P").charAt(0).toUpperCase()}
@@ -120,7 +120,7 @@ export const SocialTab: React.FC = () => {
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto px-1 space-y-4 scrollbar-thin">
+      <div className="flex-1 min-h-0 overflow-y-auto px-1 space-y-3.5 scrollbar-thin py-1">
         {isEmpty ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
             <motion.div
