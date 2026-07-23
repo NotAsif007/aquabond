@@ -133,7 +133,7 @@ function AquaBondApp() {
 
   const activeThemeId = profile?.color_theme || "sakura";
   const palette = COZY_THEMES[activeThemeId] || COZY_THEMES.sakura;
-  const needsOnboarding = Boolean(profile && (!profile.display_name || profile.display_name === "User" || profile.display_name === "Google User" || !profile.companion_name));
+  const needsOnboarding = Boolean(profile && (!profile.display_name || profile.display_name === "User" || profile.display_name === "Google User" || !profile.companion_name || !profile.weight_kg));
 
   React.useEffect(() => {
     document.documentElement.setAttribute("data-theme", activeThemeId);

@@ -176,10 +176,17 @@ export const DashboardTab: React.FC = () => {
             <User className="w-4 h-4 theme-text-primary" />
             Your Cozy Bottle
           </span>
-          <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
-            <Zap className="w-3 h-3" />
-            {profile.companion_name}
-          </span>
+          <div className="flex items-center gap-1.5">
+            {mostRecentLog && (
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-200/60 flex items-center gap-1">
+                💧 +{mostRecentLog.amount_ml}ml ({getTimeAgo(mostRecentLog.timestamp)})
+              </span>
+            )}
+            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 theme-bg-accent theme-text-primary rounded-lg border theme-border-accent flex items-center gap-1">
+              <Zap className="w-3 h-3" />
+              {profile.companion_name}
+            </span>
+          </div>
         </div>
 
         {/* Companion Bubble & Avatar */}

@@ -43,7 +43,11 @@ export const DashboardAnalyticsTab: React.FC = () => {
     weatherEnabled,
     temperature,
     humidity,
-    weatherReason
+    feelsLike,
+    weatherAdjust,
+    weatherReason,
+    weatherCondition,
+    weatherConditionEmoji
   } = useApp();
 
   if (!profile) return null;
@@ -299,17 +303,25 @@ export const DashboardAnalyticsTab: React.FC = () => {
             </div>
           </div>
           <span className="text-[10px] font-black uppercase theme-bg-accent theme-text-primary px-2.5 py-1 rounded-full border theme-border-accent">
-            {temperature > 25 ? "☀️ Warm" : temperature < 15 ? "❄️ Cool" : "⛅ Mild"}
+            {weatherConditionEmoji} {weatherCondition}
           </span>
         </div>
 
         {/* Climate Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <div className="bg-amber-50/70 border border-amber-100 p-2.5 rounded-2xl flex items-center gap-2.5">
             <span className="text-xl">🌡️</span>
             <div>
               <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Temperature</span>
-              <span className="text-xs font-black text-[#2D283E] mt-0.5 block">{temperature}°C</span>
+              <span className="text-xs font-black text-[#2D283E] mt-0.5 block">{Math.round(temperature)}°C</span>
+            </div>
+          </div>
+
+          <div className="bg-orange-50/70 border border-orange-100 p-2.5 rounded-2xl flex items-center gap-2.5">
+            <span className="text-xl">🤒</span>
+            <div>
+              <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Feels Like</span>
+              <span className="text-xs font-black text-[#2D283E] mt-0.5 block">{Math.round(feelsLike)}°C</span>
             </div>
           </div>
 
@@ -321,12 +333,12 @@ export const DashboardAnalyticsTab: React.FC = () => {
             </div>
           </div>
 
-          <div className="col-span-2 sm:col-span-1 theme-bg-accent border theme-border-accent p-2.5 rounded-2xl flex items-center gap-2.5">
+          <div className="theme-bg-accent border theme-border-accent p-2.5 rounded-2xl flex items-center gap-2.5">
             <span className="text-xl">⚡</span>
             <div>
-              <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Target Bonus</span>
+              <span className="text-[9px] font-bold text-[#8E8A9A] uppercase block leading-none">Weather Bonus</span>
               <span className="text-xs font-black theme-text-primary mt-0.5 block">
-                {temperature > 22 ? `+${Math.round((temperature - 22) * 30)}ml` : "Standard Goal"}
+                {weatherAdjust > 0 ? `+${weatherAdjust}ml` : "Standard Goal"}
               </span>
             </div>
           </div>

@@ -5,7 +5,8 @@ import {
   getSupabaseCredentials, 
   updateSupabaseConfig 
 } from "../lib/supabaseClient";
-import { fetchWeather, calculateHydrationAdjust, getWeatherReason } from "../lib/weather";
+import { fetchWeather, calculateHydrationAdjust, getWeatherReason, calculatePersonalizedGoal } from "../lib/weather";
+import type { WeatherData } from "../lib/weather";
 import { playPlop, playHeartBurstSound, playLevelUpSound } from "../lib/audio";
 import { showImmediateNotification } from "../lib/notifications";
 
@@ -34,6 +35,11 @@ export interface Profile {
   last_drank_at: string | null;
   unlocked_skins: string[];
   unlocked_outfits: string[];
+  // Body metrics for personalized goals
+  age: number | null;
+  height_cm: number | null;
+  weight_kg: number | null;
+  gender: string | null;
 }
 
 export interface Couple {
@@ -84,7 +90,7 @@ interface AppContextType {
   couple: Couple | null;
   loading: boolean;
   authError: string | null;
-  signUp: (email: string, password: string, displayName: string, companionType: string, companionName: string) => Promise<boolean>;
+  signUp: (email: string, password: string, displayName: string, companionType: string, companionName: string, age?: number, heightCm?: number, weightKg?: number, gender?: string) => Promise<boolean>;
   signIn: (email: string, password: string) => Promise<boolean>;
   signInWithOAuth: (provider: 'google' | 'discord') => Promise<boolean>;
   signOut: () => Promise<void>;
@@ -111,7 +117,13 @@ interface AppContextType {
   humidity: number;
   weatherAdjust: number;
   weatherReason: string;
+  weatherCondition: string;
+  weatherConditionEmoji: string;
+  feelsLike: number;
   toggleWeatherGoal: (enabled: boolean) => Promise<void>;
+  
+  // Profile settings update (for onboarding)
+  updateProfileSettings: (updates: Partial<Profile>) => Promise<void>;
   updateCoordinates: (lat: number, lon: number) => Promise<void>;
   
   // DND / Settings
@@ -163,7 +175,11 @@ const INITIAL_MOCK_PROFILE: Profile = {
   longest_streak: 18,
   last_drank_at: new Date().toISOString(),
   unlocked_skins: ['default', 'sunset'],
-  unlocked_outfits: ['none', 'scarf', 'sunglasses']
+  unlocked_outfits: ['none', 'scarf', 'sunglasses'],
+  age: 25,
+  height_cm: 175,
+  weight_kg: 70,
+  gender: 'male'
 };
 
 const INITIAL_MOCK_PARTNER: Profile = {
@@ -189,7 +205,11 @@ const INITIAL_MOCK_PARTNER: Profile = {
   longest_streak: 20,
   last_drank_at: new Date().toISOString(),
   unlocked_skins: ['default'],
-  unlocked_outfits: ['none']
+  unlocked_outfits: ['none'],
+  age: 24,
+  height_cm: 165,
+  weight_kg: 55,
+  gender: 'female'
 };
 
 const INITIAL_MOCK_COUPLE: Couple = {
@@ -221,8 +241,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Geolocation & Weather
   const [temperature, setTemperature] = useState<number>(24);
   const [humidity, setHumidity] = useState<number>(55);
+  const [feelsLike, setFeelsLike] = useState<number>(24);
   const [weatherAdjust, setWeatherAdjust] = useState<number>(0);
   const [weatherReason, setWeatherReason] = useState<string>("");
+  const [weatherCondition, setWeatherCondition] = useState<string>("Clear Sky");
+  const [weatherConditionEmoji, setWeatherConditionEmoji] = useState<string>("☀️");
   const [weatherEnabled, setWeatherEnabled] = useState<boolean>(false);
   
   // DND & Settings
@@ -251,6 +274,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // --- Geolocation & Weather Fetcher ---
   useEffect(() => {
+    const applyWeatherData = (w: WeatherData, companionName: string) => {
+      setTemperature(w.temp);
+      setHumidity(w.humidity);
+      setFeelsLike(w.feelsLike);
+      setWeatherCondition(w.condition);
+      setWeatherConditionEmoji(w.conditionEmoji);
+      const adj = calculateHydrationAdjust(w.feelsLike, w.humidity, w.weatherCode);
+      setWeatherAdjust(adj);
+      setWeatherReason(getWeatherReason(w.temp, w.feelsLike, w.humidity, w.weatherCode, companionName));
+    };
+
     const fetchLocalWeather = async () => {
       const companionName = profile ? profile.companion_name : "Boba";
       if (!weatherEnabled) {
@@ -280,20 +314,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 }
               }
               const w = await fetchWeather(newLat, newLon);
-              setTemperature(w.temp);
-              setHumidity(w.humidity);
-              const adj = calculateHydrationAdjust(w.temp, w.humidity);
-              setWeatherAdjust(adj);
-              setWeatherReason(getWeatherReason(w.temp, w.humidity, companionName));
+              applyWeatherData(w, companionName);
             },
             async () => {
-              // Geolocation denied, load fallback SF weather
+              // Geolocation denied, load fallback weather
               const w = await fetchWeather(lat, lon);
-              setTemperature(w.temp);
-              setHumidity(w.humidity);
-              const adj = calculateHydrationAdjust(w.temp, w.humidity);
-              setWeatherAdjust(adj);
-              setWeatherReason(getWeatherReason(w.temp, w.humidity, companionName));
+              applyWeatherData(w, companionName);
             }
           );
           return;
@@ -301,11 +327,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       
       const w = await fetchWeather(lat, lon);
-      setTemperature(w.temp);
-      setHumidity(w.humidity);
-      const adj = calculateHydrationAdjust(w.temp, w.humidity);
-      setWeatherAdjust(adj);
-      setWeatherReason(getWeatherReason(w.temp, w.humidity, companionName));
+      applyWeatherData(w, companionName);
     };
 
     fetchLocalWeather();
@@ -786,7 +808,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     password: string, 
     displayName: string, 
     companionType: string, 
-    companionName: string
+    companionName: string,
+    age?: number,
+    heightCm?: number,
+    weightKg?: number,
+    gender?: string
   ): Promise<boolean> => {
     setAuthError(null);
     if (!supabaseMode) {
@@ -806,6 +832,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (error) throw error;
       if (!data.user) throw new Error("Could not register user.");
 
+      // Calculate personalized goal from body metrics
+      const personalizedGoal = (weightKg && gender && age && heightCm)
+        ? calculatePersonalizedGoal(weightKg, gender, age, heightCm)
+        : 2000;
+
       // Create profiles table row for user
       const newProfile = {
         id: data.user.id,
@@ -813,10 +844,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         email: email,
         companion_type: companionType,
         companion_name: companionName,
-        daily_goal_ml: 2000,
+        daily_goal_ml: personalizedGoal,
         unit: 'ml',
         timezone: 'UTC',
-        weather_goal_enabled: false,
+        weather_goal_enabled: true,
         color_theme: 'sakura',
         skin_id: 'default',
         outfit_id: 'none',
@@ -825,7 +856,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         current_streak: 0,
         longest_streak: 0,
         unlocked_skins: ['default'],
-        unlocked_outfits: ['none']
+        unlocked_outfits: ['none'],
+        age: age || null,
+        height_cm: heightCm || null,
+        weight_kg: weightKg || null,
+        gender: gender || 'other'
       };
 
       const { error: profileErr } = await supabase
@@ -1678,6 +1713,47 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  // --- Update Profile Settings (used by OnboardingModal) ---
+  const updateProfileSettings = async (updates: Partial<Profile>) => {
+    if (!profile) return;
+
+    // If body metrics are being updated, recalculate the daily goal
+    const weightKg = (updates.weight_kg ?? profile.weight_kg) as number | null;
+    const gender = (updates.gender ?? profile.gender) as string | null;
+    const age = (updates.age ?? profile.age) as number | null;
+    const heightCm = (updates.height_cm ?? profile.height_cm) as number | null;
+
+    if (weightKg && gender && age && heightCm && (updates.weight_kg || updates.gender || updates.age || updates.height_cm)) {
+      updates.daily_goal_ml = calculatePersonalizedGoal(weightKg, gender, age, heightCm);
+    }
+
+    // Auto-enable weather for new onboarded users
+    if (updates.weight_kg && !profile.weather_goal_enabled) {
+      updates.weather_goal_enabled = true;
+      setWeatherEnabled(true);
+    }
+
+    const updatedProfile = { ...profile, ...updates };
+    setProfile(updatedProfile as Profile);
+
+    if (supabaseMode) {
+      const supabase = getSupabase();
+      if (!supabase) return;
+      try {
+        // Only send the fields that were updated
+        const dbUpdates: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(updates)) {
+          dbUpdates[key] = val;
+        }
+        await supabase.from("profiles").update(dbUpdates).eq("id", profile.id);
+      } catch (err) {
+        console.error("Error updating profile settings:", err);
+      }
+    } else {
+      localStorage.setItem("aquabond_demo_profile", JSON.stringify(updatedProfile));
+    }
+  };
+
   // --- Heart Animation trigger ---
   const triggerLocalFlyingHeart = () => {
     const id = Date.now();
@@ -1721,9 +1797,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       weatherEnabled,
       temperature,
       humidity,
+      feelsLike,
       weatherAdjust,
       weatherReason,
+      weatherCondition,
+      weatherConditionEmoji,
       toggleWeatherGoal,
+      updateProfileSettings,
       updateCoordinates,
       
       dndEnabled,

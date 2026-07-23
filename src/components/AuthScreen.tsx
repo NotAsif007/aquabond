@@ -27,6 +27,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onOpenDbConfig }) => {
   const [displayName, setDisplayName] = useState<string>("");
   const [companionType, setCompanionType] = useState<string>("drop");
   const [companionName, setCompanionName] = useState<string>("");
+  
+  // Body metrics
+  const [gender, setGender] = useState<string>("other");
+  const [age, setAge] = useState<string>("");
+  const [heightCm, setHeightCm] = useState<string>("");
+  const [weightKg, setWeightKg] = useState<string>("");
 
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -50,7 +56,11 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onOpenDbConfig }) => {
         password.trim(), 
         displayName.trim(), 
         companionType, 
-        companionName.trim()
+        companionName.trim(),
+        parseInt(age) || undefined,
+        parseInt(heightCm) || undefined,
+        parseFloat(weightKg) || undefined,
+        gender
       );
     } else {
       await signIn(email.trim(), password.trim());
@@ -206,6 +216,84 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onOpenDbConfig }) => {
                           <span className="text-[9px] font-bold text-[#2D283E] leading-none block truncate">{comp.name.split(" ")[0]}</span>
                         </button>
                       ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Body Metrics (Registration only) */}
+              {isRegister && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-3"
+                >
+                  {/* Gender */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black uppercase text-[#8E8A9A] tracking-wider block">Gender</label>
+                    <div className="flex gap-2">
+                      {[
+                        { id: "male", label: "Male", emoji: "👦" },
+                        { id: "female", label: "Female", emoji: "👧" },
+                        { id: "other", label: "Other", emoji: "🌈" },
+                      ].map((g) => (
+                        <button
+                          key={g.id}
+                          type="button"
+                          onClick={() => setGender(g.id)}
+                          className={`flex-1 py-2 rounded-2xl border text-center transition-all text-xs font-bold ${
+                            gender === g.id
+                              ? "theme-bg-accent theme-border-primary border-2 shadow-xs"
+                              : "bg-white/80 border-slate-100 opacity-75 hover:opacity-100"
+                          }`}
+                        >
+                          <span className="block text-lg">{g.emoji}</span>
+                          <span className="text-[10px]">{g.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Age / Height / Weight */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-[#8E8A9A] tracking-wider block">Age</label>
+                      <input
+                        type="number"
+                        placeholder="25"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        min="10"
+                        max="100"
+                        className="w-full bg-white/90 border border-white/80 focus:border-[#FF92A9] rounded-2xl px-3 py-2.5 text-base sm:text-xs font-semibold text-[#2D283E] focus:outline-none focus-ring shadow-inner text-center"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-[#8E8A9A] tracking-wider block">Height</label>
+                      <input
+                        type="number"
+                        placeholder="170"
+                        value={heightCm}
+                        onChange={(e) => setHeightCm(e.target.value)}
+                        min="100"
+                        max="250"
+                        className="w-full bg-white/90 border border-white/80 focus:border-[#FF92A9] rounded-2xl px-3 py-2.5 text-base sm:text-xs font-semibold text-[#2D283E] focus:outline-none focus-ring shadow-inner text-center"
+                      />
+                      <span className="text-[8px] text-center block text-[#8E8A9A]">cm</span>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-black uppercase text-[#8E8A9A] tracking-wider block">Weight</label>
+                      <input
+                        type="number"
+                        placeholder="65"
+                        value={weightKg}
+                        onChange={(e) => setWeightKg(e.target.value)}
+                        min="20"
+                        max="300"
+                        className="w-full bg-white/90 border border-white/80 focus:border-[#FF92A9] rounded-2xl px-3 py-2.5 text-base sm:text-xs font-semibold text-[#2D283E] focus:outline-none focus-ring shadow-inner text-center"
+                      />
+                      <span className="text-[8px] text-center block text-[#8E8A9A]">kg</span>
                     </div>
                   </div>
                 </motion.div>
